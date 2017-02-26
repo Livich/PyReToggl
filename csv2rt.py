@@ -167,7 +167,7 @@ try:
             verbose(
                 -1,
                 "Can't convert name to project id and task name for task [%s] (id: %s) at [%s]: %s" %
-                (task["Task"], task["Id"], task["Date/Time"], str(err))
+                    (task["Task"], task["Id"], task["Date/Time"], str(err))
             )
             continue
         except Exception as err:

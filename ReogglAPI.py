@@ -208,7 +208,8 @@ class ReTogglAPI:
 # # Create API client instance
 # tt = ReTogglAPI(args)
 # # Get existing project
-# proj = (ReTogglAPI.SearchHelper.search_by('name', 'Review Buzz: Dev', tt.rt_projects)[0])
+# rt_projects = tt.get_projects()
+# proj = (ReTogglAPI.SearchHelper.search_by('name', 'Review Buzz: Dev', rt_projects)[0])
 # # Create new time entry in the project
 # te = ReTogglAPI.ReTogglTimeEntry(
 #     end_date=datetime.today()+timedelta(minutes=15),
