@@ -1,0 +1,5 @@
+Id,Date,Date/Time,Project,Company,Who,Hours,Minutes,Decimal Hours,Description,Task List,Task,Parent Task,Is Sub-task,Is it Billable?,Invoice Number,Tags
+"4668473","20/02/2017","20/02/2017 10:09","CyberHull company","Outstaffing","Dima Prekrasnyy","2","22","2.367","","20-26 Feb","Collaboration - Development - RB","","0","1","","",
+"4686553","23/02/2017","23/02/2017 08:02","CyberHull company","Outstaffing","Dima Prekrasnyy","1","40","1.667","","20-26 Feb","Collaboration - Development - RB","","0","1","","",
+"4686561","23/02/2017","23/02/2017 09:10","CyberHull company","Outstaffing","Dima Prekrasnyy","0","35","0.583","","20-26 Feb","HIVE-3 - RB","","0","1","","",
+"4686518","23/02/2017","23/02/2017 09:13","CyberHull company","Outstaffing","Dima Prekrasnyy","0","20","0.333","","20-26 Feb","MNT-138 - Maintenance - RB","","0","1","","",
