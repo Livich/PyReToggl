@@ -25,12 +25,13 @@ parser.add_argument('--ch-user-token', type=str,
 parser.add_argument('-v', '--verbose', type=int,
                     default=0,
                     help='verbosity level. 0 is lowest, 4 - debug')
-parser.add_argument('-S', '--simulate', type=bool,
-                    default=True,
-                    help='simulation mode. Set to False to push tasks')
+parser.add_argument('-S', '--simulate', type=int,
+                    default=1,
+                    help='simulation mode. Set to 0 to push tasks')
 
 args = parser.parse_args()
 
+args.simulate = True if args.simulate == 1 else False
 
 def verbose(lvl, message):
     """Logger function
@@ -86,16 +87,23 @@ class RBNameHelper:
 
     @staticmethod
     def __name_to_project_id(name):
-        items = RBNameHelper.__split(name)
         # If ticket name matches pattern, use well-known project
-        if 'mnt-' in items["ticket"].lower():
+        if 'mnt-' in name.lower():
             return '000000276'  # Maintenance
-        if any(x in items["ticket"].lower() for x in ['cyb-', 'collaboration']):
+        if 'cyb-' in name.lower():
             return '000000084'  # Development
-        if 'et-' in items["ticket"].lower():
+        if 'et-' in name.lower():
             return '000000277'  # Elm Tree Project
-        if 'hive-' in items["ticket"].lower():
+        if 'hive-' in name.lower():
             return '000000297'  # HIVE project
+        if 'collaboration' in name.lower() and 'development' in name.lower():
+           return '000000084'
+        if 'collaboration' in name.lower() and 'maintenance' in name.lower():
+           return '000000276'
+
+
+
+        items = RBNameHelper.__split(name)
         # Full search in ReviewBuzz projects
         proj = ReTogglAPI.SearchHelper.search_by('name', 'Buzz', rt_projects)
         proj = ReTogglAPI.SearchHelper.search_by('name', items["project"], proj)
@@ -105,10 +113,11 @@ class RBNameHelper:
 
     @staticmethod
     def __name_to_task_name(name):
-        items = RBNameHelper.__split(name)
         # FIXME: dirty hack to apply ticket names
-        if 'collaboration' in items["ticket"].lower():
-            items["ticket"] = 'Calling, Collaboration'
+        if 'collaboration' in name.lower():
+            return 'Calling, Collaboration'
+
+        items = RBNameHelper.__split(name)
         return items["ticket"]
 
     @staticmethod
