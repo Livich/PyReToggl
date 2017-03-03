@@ -69,7 +69,7 @@ class RBNameHelper:
     NAME_TO_PROJECT_ID = 1
     NAME_TO_TASK_NAME = 0
 
-    __prekrasnyy_format = r"^(?P<ticket>(\w*-\d*)|([a-zA-Z]*))(\s-\s*(?P<project>.*))*\s*-\s*(?P<general_project>RB)"
+    __prekrasnyy_format = r"(?P<ticket>(\w*-\d*))"
 
     @staticmethod
     def conv_task_name(name, conversion_method):
@@ -97,19 +97,20 @@ class RBNameHelper:
         if 'hive-' in name.lower():
             return '000000297'  # HIVE project
         if 'collaboration' in name.lower() and 'development' in name.lower():
-           return '000000084'
+           return '000000084' # Development
         if 'collaboration' in name.lower() and 'maintenance' in name.lower():
-           return '000000276'
+           return '000000276' # Maintenance
+
+        raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % name)
 
 
-
-        items = RBNameHelper.__split(name)
+        #items = RBNameHelper.__split(name)
         # Full search in ReviewBuzz projects
-        proj = ReTogglAPI.SearchHelper.search_by('name', 'Buzz', rt_projects)
-        proj = ReTogglAPI.SearchHelper.search_by('name', items["project"], proj)
-        if len(proj) <= 0:
-            raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % str(items["project"]))
-        return proj[0].id
+        #proj = ReTogglAPI.SearchHelper.search_by('name', 'Buzz', rt_projects)
+        #proj = ReTogglAPI.SearchHelper.search_by('name', items["project"], proj)
+        #if len(proj) <= 0:
+        #    raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % str(items["project"]))
+        #return proj[0].id
 
     @staticmethod
     def __name_to_task_name(name):
@@ -123,7 +124,7 @@ class RBNameHelper:
     @staticmethod
     def __split(name: str):
         matched = re.match(RBNameHelper.__prekrasnyy_format, name).groupdict()
-        if len(matched) < 2:
+        if len(matched) == 0:
             raise RBNameHelper.NameConversionError("Cannot apply regexp to [%s]" % name)
         return matched
 
@@ -143,7 +144,7 @@ class ReTogglEntryList(ReTogglAPI.ReTogglEntry):
 
 
 pushed = ReTogglEntryList()
-
+total_time = timedelta()
 try:
     rt_api = ReTogglAPI(args, verbose)
     rt_projects = rt_api.get_projects()
@@ -158,11 +159,14 @@ try:
         verbose(2, "Pushing task [%s] at [%s] to the server%s" % (task["Task"], task["Date/Time"], " (simulation)" if args.simulate else ""))
         start_datetime = datetime.strptime(task["Date/Time"], csv_date_time_format)
         try:
-            end_datetime = start_datetime + timedelta(hours=float(task["Decimal Hours"]))
+            hours = float(task["Decimal Hours"])
+            total_time += timedelta(hours=hours)
+            end_datetime = start_datetime + timedelta(hours=hours)
             time_entry = ReTogglAPI.ReTogglTimeEntry(
                 start_date=start_datetime,
                 end_date=end_datetime,
-                name=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_TASK_NAME).strip(),
+                #name=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_TASK_NAME).strip(),
+                name=task["Task"].strip(),
                 project_id=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_PROJECT_ID),
                 user_id=args.user_id,
                 id=task["Id"]
@@ -190,5 +194,5 @@ try:
 except Exception as err:
     verbose(-1, "Something went wrong: {0}".format(err))
     sys.exit(1)
-
+verbose(2, "Total time: %s"%str(total_time))
 verbose(1, pushed.as_json())
