@@ -41,15 +41,16 @@ def verbose(lvl, message):
         message --  message text
     """
     hdr = {
-        -1: "SYS",
-        0: "STATUS",
-        1: "INFO",
-        2: "MSG",
-        3: "EXTRA",
-        4: "DBG"
+        -2: "",
+        -1: "SYS: ",
+        0: "STATUS: ",
+        1: "INFO: ",
+        2: "MSG: ",
+        3: "EXTRA: ",
+        4: "DBG: "
     }
     if args.verbose >= lvl:
-        print("%s: %s" % (hdr[lvl], message))
+        print("%s%s" % (hdr[lvl], message))
 
 
 csv_date_format = "%d/%m/%Y"
@@ -59,7 +60,7 @@ csv_date_time_format = "%s %s" % (csv_date_format, csv_time_format)
 rt_projects = []
 
 if args.simulate:
-    verbose(-1, "Simulation mode ON. Set -S to False to push tasks")
+    verbose(-1, "Simulation mode ON. Set -S 0 to push tasks")
 
 
 class RBNameHelper:
@@ -102,15 +103,6 @@ class RBNameHelper:
            return '000000276' # Maintenance
 
         raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % name)
-
-
-        #items = RBNameHelper.__split(name)
-        # Full search in ReviewBuzz projects
-        #proj = ReTogglAPI.SearchHelper.search_by('name', 'Buzz', rt_projects)
-        #proj = ReTogglAPI.SearchHelper.search_by('name', items["project"], proj)
-        #if len(proj) <= 0:
-        #    raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % str(items["project"]))
-        #return proj[0].id
 
     @staticmethod
     def __name_to_task_name(name):
@@ -165,7 +157,6 @@ try:
             time_entry = ReTogglAPI.ReTogglTimeEntry(
                 start_date=start_datetime,
                 end_date=end_datetime,
-                #name=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_TASK_NAME).strip(),
                 name=task["Task"].strip(),
                 project_id=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_PROJECT_ID),
                 user_id=args.user_id,
@@ -195,4 +186,4 @@ except Exception as err:
     verbose(-1, "Something went wrong: {0}".format(err))
     sys.exit(1)
 verbose(2, "Total time: %s"%str(total_time))
-verbose(1, pushed.as_json())
+verbose(-2, pushed.as_json())
