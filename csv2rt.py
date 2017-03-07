@@ -25,12 +25,13 @@ parser.add_argument('--ch-user-token', type=str,
 parser.add_argument('-v', '--verbose', type=int,
                     default=0,
                     help='verbosity level. 0 is lowest, 4 - debug')
-parser.add_argument('-S', '--simulate', type=bool,
-                    default=True,
-                    help='simulation mode. Set to False to push tasks')
+parser.add_argument('-S', '--simulate', type=int,
+                    default=1,
+                    help='simulation mode. Set to 0 to push tasks')
 
 args = parser.parse_args()
 
+args.simulate = True if args.simulate == 1 else False
 
 def verbose(lvl, message):
     """Logger function
@@ -40,15 +41,16 @@ def verbose(lvl, message):
         message --  message text
     """
     hdr = {
-        -1: "SYS",
-        0: "STATUS",
-        1: "INFO",
-        2: "MSG",
-        3: "EXTRA",
-        4: "DBG"
+        -2: "",
+        -1: "SYS: ",
+        0: "STATUS: ",
+        1: "INFO: ",
+        2: "MSG: ",
+        3: "EXTRA: ",
+        4: "DBG: "
     }
     if args.verbose >= lvl:
-        print("%s: %s" % (hdr[lvl], message))
+        print("%s%s" % (hdr[lvl], message))
 
 
 csv_date_format = "%d/%m/%Y"
@@ -58,7 +60,7 @@ csv_date_time_format = "%s %s" % (csv_date_format, csv_time_format)
 rt_projects = []
 
 if args.simulate:
-    verbose(-1, "Simulation mode ON. Set -S to False to push tasks")
+    verbose(-1, "Simulation mode ON. Set -S 0 to push tasks")
 
 
 class RBNameHelper:
@@ -68,7 +70,7 @@ class RBNameHelper:
     NAME_TO_PROJECT_ID = 1
     NAME_TO_TASK_NAME = 0
 
-    __prekrasnyy_format = r"^(?P<ticket>(\w*-\d*)|([a-zA-Z]*))(\s-\s*(?P<project>.*))*\s*-\s*(?P<general_project>RB)"
+    __prekrasnyy_format = r"(?P<ticket>(\w*-\d*))"
 
     @staticmethod
     def conv_task_name(name, conversion_method):
@@ -86,35 +88,35 @@ class RBNameHelper:
 
     @staticmethod
     def __name_to_project_id(name):
-        items = RBNameHelper.__split(name)
         # If ticket name matches pattern, use well-known project
-        if 'mnt-' in items["ticket"].lower():
+        if 'mnt-' in name.lower():
             return '000000276'  # Maintenance
-        if any(x in items["ticket"].lower() for x in ['cyb-', 'collaboration']):
+        if 'cyb-' in name.lower():
             return '000000084'  # Development
-        if 'et-' in items["ticket"].lower():
+        if 'et-' in name.lower():
             return '000000277'  # Elm Tree Project
-        if 'hive-' in items["ticket"].lower():
+        if 'hive-' in name.lower():
             return '000000297'  # HIVE project
-        # Full search in ReviewBuzz projects
-        proj = ReTogglAPI.SearchHelper.search_by('name', 'Buzz', rt_projects)
-        proj = ReTogglAPI.SearchHelper.search_by('name', items["project"], proj)
-        if len(proj) <= 0:
-            raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % str(items["project"]))
-        return proj[0].id
+        if 'collaboration' in name.lower() and 'development' in name.lower():
+           return '000000084' # Development
+        if 'collaboration' in name.lower() and 'maintenance' in name.lower():
+           return '000000276' # Maintenance
+
+        raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % name)
 
     @staticmethod
     def __name_to_task_name(name):
-        items = RBNameHelper.__split(name)
         # FIXME: dirty hack to apply ticket names
-        if 'collaboration' in items["ticket"].lower():
-            items["ticket"] = 'Calling, Collaboration'
+        if 'collaboration' in name.lower():
+            return 'Calling, Collaboration'
+
+        items = RBNameHelper.__split(name)
         return items["ticket"]
 
     @staticmethod
     def __split(name: str):
         matched = re.match(RBNameHelper.__prekrasnyy_format, name).groupdict()
-        if len(matched) < 2:
+        if len(matched) == 0:
             raise RBNameHelper.NameConversionError("Cannot apply regexp to [%s]" % name)
         return matched
 
@@ -134,7 +136,7 @@ class ReTogglEntryList(ReTogglAPI.ReTogglEntry):
 
 
 pushed = ReTogglEntryList()
-
+total_time = timedelta()
 try:
     rt_api = ReTogglAPI(args, verbose)
     rt_projects = rt_api.get_projects()
@@ -149,11 +151,13 @@ try:
         verbose(2, "Pushing task [%s] at [%s] to the server%s" % (task["Task"], task["Date/Time"], " (simulation)" if args.simulate else ""))
         start_datetime = datetime.strptime(task["Date/Time"], csv_date_time_format)
         try:
-            end_datetime = start_datetime + timedelta(hours=float(task["Decimal Hours"]))
+            hours = float(task["Decimal Hours"])
+            total_time += timedelta(hours=hours)
+            end_datetime = start_datetime + timedelta(hours=hours)
             time_entry = ReTogglAPI.ReTogglTimeEntry(
                 start_date=start_datetime,
                 end_date=end_datetime,
-                name=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_TASK_NAME).strip(),
+                name=task["Task"].strip(),
                 project_id=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_PROJECT_ID),
                 user_id=args.user_id,
                 id=task["Id"]
@@ -181,5 +185,5 @@ try:
 except Exception as err:
     verbose(-1, "Something went wrong: {0}".format(err))
     sys.exit(1)
-
-verbose(1, pushed.as_json())
+verbose(2, "Total time: %s"%str(total_time))
+verbose(-2, pushed.as_json())
