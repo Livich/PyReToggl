@@ -3,5 +3,4 @@ test:
 sudo: false
 language: python
 cache: pip
-python:
-  -"3.4"
+python: "3.5"
