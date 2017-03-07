@@ -1,0 +1,7 @@
+test:
+    pytest test
+sudo: false
+language: python
+cache: pip
+python:
+  -"3.4"
