@@ -4,7 +4,7 @@
 
 ## ReTogglAPI
 
-API client implemented as class `ReTogglAPI`. Initialize it with dict to set such configurations:
+API client implemented as class `ReTogglAPI`. Initialize it with `argparse.Namespace` to set such configurations:
 * `endpoint` - API endpoint (HTTP address)
 * `user_agent` - User-Agent header string
 * `ch_user_token` - CyberHull user token
@@ -77,5 +77,4 @@ Look to code of `csv2rt` to get extended API client usage example.
 
 `tw2rt` is a command line utility to copy time entries from TeamWork (using official TW API) to ReToggl (using given unofficial API implementation).
 
-Team Work API client is implemented in `/TeamWorkAPI.py`.
-        
+Team Work API client is implemented in `/TeamWorkAPI.py`
