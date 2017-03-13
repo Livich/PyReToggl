@@ -11,7 +11,16 @@ parser.add_argument('-u', '--user-agent', type=str,
                     help='user-agent header for HTTP requests')
 parser.add_argument('-e', '--endpoint', type=str,
                     default='***REMOVED***',
-                    help='ReToggl API endpoint')
+                    help='ReToggl API endpoint')        
+parser.add_argument('--tw-endpoint', type=str,
+                    default="***REMOVED***",
+                    help='TeamWork API endpoint')     
+parser.add_argument('-k', '--tw-api-key', type=str,
+                    default="***REMOVED***",
+                    help='TeamWork API key')     
+parser.add_argument('-k', '--tw-api-pass', type=str,
+                    default="***REMOVED***",
+                    help='TeamWork API password')     
 parser.add_argument('-t', '--user-token', type=str,
                     default='***REMOVED***',
                     help='ReToggl API token')
@@ -26,7 +35,7 @@ parser.add_argument('-v', '--verbose', type=int,
                     help='verbosity level. 0 is lowest, 4 - debug')
 parser.add_argument('-S', '--simulate', type=int,
                     default=1,
-                    help='simulation mode. Set to 0 to push tasks')
+                    help='simulation mode. Set to 0 to push tasks')   
 
 args = parser.parse_args()
 
@@ -142,10 +151,10 @@ try:
 
     task_data = []
     tw_api = TeamWorkAPI(argparse.Namespace(
-       endpoint="***REMOVED***",
-       user_agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0",
-       api_key="***REMOVED***",
-       password="***REMOVED***"
+       endpoint=args.t_endpoint,
+       user_agent=args.user_agent,
+       api_key=args.tw_api_key,
+       password=args.tw_api_pass
     ))
     dt_from = datetime.date.today()
     dt_to = datetime.date.today() + datetime.timedelta(days=1)
@@ -153,7 +162,11 @@ try:
 
     verbose(1, "%i tasks loaded" % len(task_data))
     for task in task_data:
-        verbose(2, "Pushing task [%s] at [%s] to the server%s" % (task.name, datetime.datetime.strftime(task.dt_start, csv_date_time_format), " (simulation)" if args.simulate else ""))
+        verbose(
+          2,
+          "Pushing task [%s] at [%s] to the server%s" %
+          (task.name, datetime.datetime.strftime(task.dt_start, csv_date_time_format), " (simulation)" if args.simulate else "")
+        )
         try:
             time_entry = ReTogglAPI.ReTogglTimeEntry(
                 start_date=task.dt_start,
