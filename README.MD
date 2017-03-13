@@ -1,5 +1,7 @@
 # ReToggl unofficial API client
 
+[![Build Status](https://travis-ci.com/Livich/PyReToggl.svg?token=6T8dpeTmz8PpycNpNg8C&branch=master)](https://travis-ci.com/Livich/PyReToggl)
+
 ## ReTogglAPI
 
 API client implemented as class `ReTogglAPI`. Initialize it with dict to set such configurations:
