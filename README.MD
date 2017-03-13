@@ -32,15 +32,16 @@ There is special class to hold ReToggl time entry - `ReTogglAPI.ReTogglTimeEntry
 ### Usage example
 ```python
 from ReogglAPI import ReTogglAPI
+from argparse import Namespace
 
 # Create API client instance
-tt = ReTogglAPI({
-    "user_id": "1234",
-    "endpoint": "***REMOVED***",
-    "user_agent": "PyReToggl",
-    "ch_user_token": "YOUR CH TOKEN",
-    "user_token": "YOUR RT TOKEN"
-})
+tt = ReTogglAPI(Namespace(
+    user_id="1234",
+    endpoint="***REMOVED***",
+    user_agent="PyReToggl",
+    ch_user_token="YOUR CH TOKEN",
+    user_token="YOUR RT TOKEN"
+))
 
 # Get project
 rt_projects = rt_api.get_projects()
@@ -71,4 +72,10 @@ Id,Date,Date/Time,Project,Company,Who,Hours,Minutes,Decimal Hours,Description,Ta
 ```
 
 Look to code of `csv2rt` to get extended API client usage example.
+
+##TW2RT
+
+`tw2rt` is a command line utility to copy time entries from TeamWork (using official TW API) to ReToggl (using given unofficial API implementation).
+
+Team Work API client is implemented in `/TeamWorkAPI.py`.
         
