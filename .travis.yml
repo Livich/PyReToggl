@@ -1,6 +1,8 @@
+addons:
+    code_climate:
+        repo_token: 40748b63a30c248369f19e5255e8bec726d7a7a25708a597bdf1181b71fc63e3
 test:
     pytest test
-sudo: false
 language: python
 cache: pip
 python: "3.5"
