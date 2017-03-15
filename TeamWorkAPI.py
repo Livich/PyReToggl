@@ -63,7 +63,9 @@ class TeamWorkAPI:
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Connection': 'keep-alive',
-            'Authorization': 'BASIC '+base64.b64encode(("%s:%s" % (params.api_key, params.password)).encode('ascii')).decode('ascii')
+            'Authorization': 'BASIC '+base64.b64encode(
+                ("%s:%s" % (params.api_key, params.password)).encode('ascii')
+            ).decode('ascii')
         }
 
     def __get_json(self, what, headers, data):

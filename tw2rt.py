@@ -63,6 +63,7 @@ args.simulate = True if args.simulate == 1 else False
 config = configparser.ConfigParser()
 config.read(args.profile)
 
+
 def verbose(lvl, message):
     """Logger function
 
@@ -119,8 +120,11 @@ try:
     for task in task_data:
         verbose(
           2,
-          "Pushing task [%s] at [%s] to the server%s" %
-          (task.name, datetime.datetime.strftime(task.dt_start, date_time_format), " (simulation)" if args.simulate else "")
+          "Pushing task [%s] at [%s] to the server%s" % (
+              task.name,
+              datetime.datetime.strftime(task.dt_start, date_time_format),
+              " (simulation)" if args.simulate else ""
+          )
         )
         try:
             time_entry = ReTogglAPI.ReTogglTimeEntry(
@@ -135,7 +139,13 @@ try:
                 pushed.append(time_entry)
             else:
                 pushed.append(rt_api.new_time_entry(time_entry))
-                verbose(1, "Task [%s] at [%s] pushed" % (task.name, datetime.datetime.strftime(task.dt_start, date_time_format)))
+                verbose(
+                    1,
+                    "Task [%s] at [%s] pushed" % (
+                        task.name,
+                        datetime.datetime.strftime(task.dt_start, date_time_format)
+                    )
+                )
         except RBNameHelper.NameConversionError as err:
             verbose(
                 -1,
@@ -149,8 +159,11 @@ try:
         except Exception as err:
             verbose(
                 -1,
-                "Something wrong with server while pushing task [%s] (id=%s): %s. Check server state manually" %
-                (task.name, task.id, str(err))
+                "Something wrong with server while pushing task [%s] (id=%s): %s. Check server state manually" % (
+                    task.name,
+                    task.id,
+                    str(err)
+                )
             )
             continue
 

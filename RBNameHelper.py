@@ -1,5 +1,6 @@
 import re
 
+
 class RBNameHelper:
     class NameConversionError(Exception):
         pass

@@ -33,6 +33,7 @@ args = parser.parse_args()
 
 args.simulate = True if args.simulate == 1 else False
 
+
 def verbose(lvl, message):
     """Logger function
 
@@ -75,7 +76,14 @@ try:
             task_data.append(row)
     verbose(1, "%i tasks loaded" % len(task_data))
     for task in task_data:
-        verbose(2, "Pushing task [%s] at [%s] to the server%s" % (task["Task"], task["Date/Time"], " (simulation)" if args.simulate else ""))
+        verbose(
+            2,
+            "Pushing task [%s] at [%s] to the server%s" % (
+                task["Task"],
+                task["Date/Time"],
+                " (simulation)" if args.simulate else ""
+            )
+        )
         start_datetime = datetime.strptime(task["Date/Time"], csv_date_time_format)
         try:
             hours = float(task["Decimal Hours"])
@@ -97,15 +105,22 @@ try:
         except RBNameHelper.NameConversionError as err:
             verbose(
                 -1,
-                "Can't convert name to project id and task name for task [%s] (id: %s) at [%s]: %s" %
-                    (task["Task"], task["Id"], task["Date/Time"], str(err))
+                "Can't convert name to project id and task name for task [%s] (id: %s) at [%s]: %s" % (
+                    task["Task"],
+                    task["Id"],
+                    task["Date/Time"],
+                    str(err)
+                )
             )
             continue
         except Exception as err:
             verbose(
                 -1,
-                "Something wrong with server while pushing task [%s] at [%s]: %s. Check server state manually" %
-                (task["Task"], task["Date/Time"], str(err))
+                "Something wrong with server while pushing task [%s] at [%s]: %s. Check server state manually" % (
+                    task["Task"],
+                    task["Date/Time"],
+                    str(err)
+                )
             )
             continue
 
