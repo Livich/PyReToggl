@@ -62,7 +62,7 @@ class ReTogglAPI:
                      project_id='',
                      start_date=datetime.today(),
                      time_zone_offset_minutes=0,
-                     user_id='',
+                     user_id=0,
                      id=0,
                      deleted=False):
             self.end_date = end_date
@@ -104,6 +104,19 @@ class ReTogglAPI:
             )
             pass
 
+    class ReTogglEntryList(ReTogglEntry):
+        """Holds a list of ReTogglEntry"""
+        l = []
+
+        def append(self, item):
+            self.l.append(item)
+
+        def as_json(self):
+            return self._as_json(self.l)
+
+        def get_list(self):
+            return self.l
+
     class ReTogglProject(ReTogglEntry):
         """Project holds general information about a number of time entries"""
         __default_project = {
@@ -136,7 +149,6 @@ class ReTogglAPI:
             'Referer': 'http://%s/' % endpoint.netloc,
             'Connection': 'keep-alive'
         }
-        self.verbose(3, "Ready to load project list")
 
     def __get_json(self, method, url, **kwargs):
         self.verbose(4, "[%s] %s" % (method, url))
@@ -152,7 +164,6 @@ class ReTogglAPI:
         )
         data = self.__get_json('get', u_get_projects, headers=self.common_headers)
         projects = {proj['id']: self.ReTogglProject(proj) for (proj) in data['data']}
-        self.verbose(2, "Loaded %i known projects" % (len(projects)))
         return projects
 
     def get_tasks(self, start_date, end_date):

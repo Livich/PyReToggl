@@ -66,15 +66,15 @@ class TeamWorkAPI:
             'Authorization': 'BASIC '+base64.b64encode(("%s:%s" % (params.api_key, params.password)).encode('ascii')).decode('ascii')
         }
 
-        self.verbose(3, "Ready to load time entries from TeamWork")
-
     def __get_json(self, what, headers, data):
-        data = requests.get(self.params.endpoint+what, headers=headers, data=data)
+        url = self.params.endpoint+what
+        self.verbose(4, "[get] %s" % url)
+        data = requests.get(url, headers=headers, data=data)
         j = json.loads(data.text)
         entries = [TeamWorkAPI.TeamWorkTimeEntry.from_dict(e) for e in j['time-entries']]
         return entries
 
-    def get_time_entries(self, dt_from: datetime, dt_to: datetime, uid: int):
+    def get_time_entries(self, dt_from: datetime, dt_to: datetime, uid):
         data = {
                 'fromdate': dt_from.strftime(self.date_format),
                 'fromtime': dt_from.strftime(self.time_format),
@@ -82,7 +82,7 @@ class TeamWorkAPI:
                 'totime': dt_to.strftime(self.time_format),
                 'showDeleted': False
         }
-        if uid > 0:
+        if uid:
             data['userId'] = uid
         params = urllib.parse.urlencode(data, doseq=True)
         entries = self.__get_json("time_entries.json?%s" % params, self.common_headers, None)
