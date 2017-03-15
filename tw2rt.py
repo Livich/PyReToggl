@@ -4,12 +4,14 @@ from ReogglAPI import ReTogglAPI
 from TeamWorkAPI import TeamWorkAPI
 from RBNameHelper import RBNameHelper
 import sys
+import os
 import configparser
 
 date_format = "%d/%m/%Y"
 time_format = "%H:%M"
 date_time_format = "%sT%s" % (date_format, time_format)
 date_time_format_friendly = 'DD/MM/YYYYTHH:MM'
+global_config_file = "~/tw2rt.ini"
 
 
 def valid_date_time(s):
@@ -33,10 +35,10 @@ parser.add_argument('-t',
                     type=valid_date_time,
                     default='',
                     help='Date and time to end with (%s)' % date_time_format_friendly)
-parser.add_argument('profile',
-                    metavar='P',
+parser.add_argument('-p',
+                    '--profile',
                     type=str,
-                    default="./config.ini",
+                    default=global_config_file if os.path.isfile(global_config_file) else "./config.ini",
                     help='Profile to work with')
 parser.add_argument('-v',
                     '--verbose',
@@ -61,6 +63,10 @@ args = parser.parse_args()
 args.simulate = True if args.simulate == 1 else False
 
 config = configparser.ConfigParser()
+
+if not os.path.isfile(args.profile):
+    raise FileNotFoundError("%s profile configuration is not found" % args.profile)
+
 config.read(args.profile)
 
 
