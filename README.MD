@@ -44,7 +44,7 @@ tt = ReTogglAPI(Namespace(
 ))
 
 # Get project
-rt_projects = rt_api.get_projects()
+rt_projects = tt.get_projects()
 proj = (ReTogglAPI.SearchHelper.search_by('name', 'Review Buzz: Dev', rt_projects)[0])
 # Create new time entry in the project. Other attributes will be set automatically
 te = ReTogglAPI.ReTogglTimeEntry(
@@ -73,8 +73,14 @@ Id,Date,Date/Time,Project,Company,Who,Hours,Minutes,Decimal Hours,Description,Ta
 
 Look to code of `csv2rt` to get extended API client usage example.
 
-##TW2RT
+## TW2RT
 
-`tw2rt` is a command line utility to copy time entries from TeamWork (using official TW API) to ReToggl (using given unofficial API implementation).
+`tw2rt` is a command line utility to copy time entries from TeamWork (using official TW API) to ReToggl (using given unofficial API implementation). Call `tw2rt -h` to see usage information.
+
+>Hint: most configurations for tw2rt are placed in `./config.ini`
 
 Team Work API client is implemented in `/TeamWorkAPI.py`
+
+## `push_today`
+
+`push_today` is a bash script to copy time entries from TeamWork to ReToggl using `tw2rt`. Script copies today's time entries auto-magically :) Call `push_today.sh` to see usage information.
