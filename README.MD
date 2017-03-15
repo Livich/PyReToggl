@@ -29,6 +29,8 @@ There is special class to hold ReToggl time entry - `ReTogglAPI.ReTogglTimeEntry
 * `id: str` - set this field to random number to create new task. After using `ReTogglAPI.new_time_entry` on such entry the field will be updated to actual value
 * `deleted: bool` - deletion flag
 
+In case when you need to hold a list of `ReTogglAPI.ReTogglTimeEntry` you may use `ReTogglAPI.ReTogglEntryList`.
+
 ### Usage example
 ```python
 from ReogglAPI import ReTogglAPI
@@ -79,8 +81,39 @@ Look to code of `csv2rt` to get extended API client usage example.
 
 >Hint: most configurations for tw2rt are placed in `./config.ini`
 
+### Configuration file format
+
+```ini
+[general]
+user_agent=USER-AGENT HEADER VALUE
+
+[retoggl]
+endpoint=RETOGGL API ENDPOINT
+user_token=RETOGGL USER TOKEN
+user_id=RETOGGL USER ID
+ch_user_token=CYBERHULL USER TOKEN
+
+[teamwork]
+endpoint=TEAMWORK API ENDPOINT
+api_key=TEAMWORK API KEY
+api_pass=TEAMWORK API PASSWORD
+user_id=TEAMWORK USER ID
+```
+
 Team Work API client is implemented in `/TeamWorkAPI.py`
 
 ## `push_today`
 
 `push_today` is a bash script to copy time entries from TeamWork to ReToggl using `tw2rt`. Script copies today's time entries auto-magically :) Call `push_today.sh` to see usage information.
+
+# ReviewBuzz related information
+
+I made reverse-engineering of ReToggl API for my own needs, to copy information about certain project (ReviewBuzz, actually) from TeamWork.
+So there are a lot of ReviewBuzz related code in the repository.
+
+## `RBNameHelper`
+
+ReviewBuzz Name Helper is a utility class which helps with ticket-name-to-project-id and ticket-name-to-task-name conversion.
+Conversion routine is based on ticket naming standard which was modified by Dmitryy Prekrasnyy (so there is `__prekrasnyy_format` attribute).
+
+`RBNameHelper` is used in both TW2RT and CSV2RT.
