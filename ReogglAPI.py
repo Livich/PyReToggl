@@ -176,7 +176,7 @@ class ReTogglAPI:
             s_start_date
         )
         data = self.__get_json('get', u_get_tasks, headers=self.common_headers)
-        tasks = {ti['id']: self.ReTogglTimeEntry(ti) for (ti) in data['data']['time_entries']}
+        tasks = {ti['id']: self.ReTogglTimeEntry.from_dict(ti) for (ti) in data['data']['time_entries']}
         self.verbose(2, "Loaded %i time entries from %s to %s" % (len(tasks), s_start_date, s_end_date))
         return tasks
 

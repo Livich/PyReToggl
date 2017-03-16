@@ -79,7 +79,18 @@ Look to code of `csv2rt` to get extended API client usage example.
 
 `tw2rt` is a command line utility to copy time entries from TeamWork (using official TW API) to ReToggl (using given unofficial API implementation). Call `tw2rt -h` to see usage information.
 
->Hint: most configurations for tw2rt are placed in `./config.ini`
+>Hint: most configurations for tw2rt are placed in `./config.ini`. You may have your own `~/tw2rt.ini` outside the repository.
+
+### Arguments
+
+All command line arguments are optional.
+
+* `-h, --help` display short help
+* `-f, --date-from` date and time to start fetching time entries from TeamWork. Format: `DD/MM/YYYTHH:MM` (e.g. 13/01/2017T08:03). By default it is set to current date, 00:00
+* `-t, --date-to` same as `-f`, means date and time to end with
+* `-p, --profile` profile configuration file. T2RT will try to use `~/tw2rt.ini` and then `./config.ini` files when alternative value is not provided
+* `-v, --verbose` verbosity level in range from -2 to 4. It is set to `0` by default
+* `-S, --simulate` simulation flag. By default it set to `1` so TW2RT will not actually push time entries to ReToggl
 
 ### Configuration file format
 
@@ -110,6 +121,19 @@ Team Work API client is implemented in `/TeamWorkAPI.py`
 
 I made reverse-engineering of ReToggl API for my own needs, to copy information about certain project (ReviewBuzz, actually) from TeamWork.
 So there are a lot of ReviewBuzz related code in the repository.
+
+## Usage with ReviewBuzz
+
+* Clone the repository
+* `sudo apt-get install python3 python3-pip -y`
+* `python3 -m pip install requests`
+* Put configuration file to `~/tw2rt.ini` (you may copy it from `config.ini`). Don't forget to change its contents!
+* Use `push_today.sh` everyday, or by example:
+```
+python3 ./tw2rt.py -f 01/03/2017T00:01 -t 01/03/2017T23:59 -v 0 -S 0
+```
+
+Currently TW2RT will prevent duplicating ReToggl items just by stopping execution.
 
 ## `RBNameHelper`
 

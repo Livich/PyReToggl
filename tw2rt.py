@@ -105,6 +105,12 @@ try:
         ),
         verbose
     )
+
+    for tid, task in rt_api.get_latest_tasks().items():
+        if (task.start_date >= args.date_from) or (task.end_date <= args.date_to):
+            # TODO: remove duplicates from ReToggl before push
+            raise Exception("There is at least one time entry to duplicate. TW2RT doesn't handle this currently")
+
     rt_projects = rt_api.get_projects()
     verbose(1, "%i projects loaded" % len(rt_projects))
 
