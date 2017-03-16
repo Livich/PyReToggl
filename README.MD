@@ -127,6 +127,8 @@ So there are a lot of ReviewBuzz related code in the repository.
 * Clone the repository
 * `sudo apt-get install python3 python3-pip -y`
 * `python3 -m pip install requests`
+* Grab your TeamWork API key from your profile page
+* Use browser developer tools to sniff your CyberHull token and user ID
 * Put configuration file to `~/tw2rt.ini` (you may copy it from `config.ini`). Don't forget to change its contents!
 * Use `push_today.sh` everyday, or by example:
 ```

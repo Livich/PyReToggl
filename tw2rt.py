@@ -17,8 +17,8 @@ global_config_file = "~/tw2rt.ini"
 def valid_date_time(s):
     try:
         if not s:
-            return datetime.date.today()
-        return datetime.datetime.strptime(s, date_time_format)
+            return datetime.datetime.today()
+        return datetime.datetime.strptime(str.strip(s), date_time_format)
     except ValueError:
         msg = "Not a valid date: '{0}'.".format(s)
         raise argparse.ArgumentTypeError(msg)
@@ -107,7 +107,7 @@ try:
     )
 
     for tid, task in rt_api.get_latest_tasks().items():
-        if (task.start_date >= args.date_from) or (task.end_date <= args.date_to):
+        if args.date_from < task.start_date < args.date_to:
             # TODO: remove duplicates from ReToggl before push
             raise Exception("There is at least one time entry to duplicate. TW2RT doesn't handle this currently")
 
