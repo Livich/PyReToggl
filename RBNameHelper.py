@@ -10,8 +10,26 @@ class RBNameHelper:
 
     __prekrasnyy_format = r"(?P<ticket>(\w*-\d*))"
 
+    __patterns = []
+
+    def __init__(self, patterns):
+        self.__patterns = patterns
+
     @staticmethod
-    def conv_task_name(name, conversion_method):
+    def conv_task_name_auto(name, conversion_method):
+        this = RBNameHelper(
+            [
+                ('mnt-', '000000276'),
+                ('cyb-', '000000084'),
+                ('et-', '000000277'),
+                ('hive-', '000000297'),
+                ('collaboration - development', '000000084'),
+                ('collaboration - maintenance', '000000276')
+            ]
+        )
+        return this.conv_task_name(name, conversion_method)
+
+    def conv_task_name(self, name, conversion_method):
         """Converts task name to project ID or to ReToggl task name
 
         Keyword arguments:
@@ -20,30 +38,17 @@ class RBNameHelper:
                                     or to NAME_TO_TASK_NAME when name prettifying needed
         """
         if conversion_method == RBNameHelper.NAME_TO_PROJECT_ID:
-            return RBNameHelper.__name_to_project_id(name)
+            return self.__name_to_project_id(name)
         if conversion_method == RBNameHelper.NAME_TO_TASK_NAME:
-            return RBNameHelper.__name_to_task_name(name)
+            return self.__name_to_task_name(name)
 
-    @staticmethod
-    def __name_to_project_id(name):
-        # If ticket name matches pattern, use well-known project
-        if 'mnt-' in name.lower():
-            return '000000276'  # Maintenance
-        if 'cyb-' in name.lower():
-            return '000000084'  # Development
-        if 'et-' in name.lower():
-            return '000000277'  # Elm Tree Project
-        if 'hive-' in name.lower():
-            return '000000297'  # HIVE project
-        if 'collaboration' in name.lower() and 'development' in name.lower():
-           return '000000084' # Development
-        if 'collaboration' in name.lower() and 'maintenance' in name.lower():
-           return '000000276' # Maintenance
-
+    def __name_to_project_id(self, name):
+        for pattern, projectId in self.__patterns:
+            if pattern in name.lower():
+                return projectId
         raise RBNameHelper.NameConversionError("Cannot convert [%s] to project ID" % name)
 
-    @staticmethod
-    def __name_to_task_name(name):
+    def __name_to_task_name(self, name):
         # FIXME: dirty hack to apply ticket names
         if 'collaboration' in name.lower():
             return 'Calling, Collaboration'

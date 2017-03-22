@@ -91,6 +91,7 @@ All command line arguments are optional.
 * `-p, --profile` profile configuration file. T2RT will try to use `~/tw2rt.ini` and then `./config.ini` files when alternative value is not provided
 * `-v, --verbose` verbosity level in range from -2 to 4. It is set to `0` by default
 * `-S, --simulate` simulation flag. By default it set to `1` so TW2RT will not actually push time entries to ReToggl
+* `--force` override some checks which prevents duplicating time entries and so on
 
 ### Configuration file format
 
@@ -98,17 +99,26 @@ All command line arguments are optional.
 [general]
 user_agent=USER-AGENT HEADER VALUE
 
+# ReToggl API settings
 [retoggl]
 endpoint=RETOGGL API ENDPOINT
 user_token=RETOGGL USER TOKEN
 user_id=RETOGGL USER ID
 ch_user_token=CYBERHULL USER TOKEN
 
+# TeamWork API settings
 [teamwork]
 endpoint=TEAMWORK API ENDPOINT
 api_key=TEAMWORK API KEY
 api_pass=TEAMWORK API PASSWORD
 user_id=TEAMWORK USER ID
+
+# RB name helper settings
+[rb_name_helper]
+# pairs of:
+# task name substring=ReToggl Project ID
+# eg:
+mnt-138=12345
 ```
 
 Team Work API client is implemented in `/TeamWorkAPI.py`
@@ -141,5 +151,16 @@ Currently TW2RT will prevent duplicating ReToggl items just by stopping executio
 
 ReviewBuzz Name Helper is a utility class which helps with ticket-name-to-project-id and ticket-name-to-task-name conversion.
 Conversion routine is based on ticket naming standard which was modified by Dmitryy Prekrasnyy (so there is `__prekrasnyy_format` attribute).
+
+To convert task name to project ID `RBNameHelper` uses `[rb_name_helper]` config section. Here are some well-known project IDs:
+```
+Maintenance - 000000276
+Development - 000000084
+Elm Tree    - 000000277
+HIVE        - 000000297
+Glossary    - 000000286
+Lennox      - 000000244
+RB QA       - 000000031
+```
 
 `RBNameHelper` is used in both TW2RT and CSV2RT.

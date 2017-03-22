@@ -56,7 +56,9 @@ parser.add_argument('-S',
                     '--simulate',
                     type=int,
                     default=1,
-                    help='simulation mode. Set to 0 to push tasks')   
+                    help='simulation mode. Set to 0 to push tasks')
+parser.add_argument('--force',
+                    action='store_true')
 
 args = parser.parse_args()
 
@@ -107,7 +109,7 @@ try:
     )
 
     for tid, task in rt_api.get_latest_tasks().items():
-        if args.date_from < task.start_date < args.date_to:
+        if args.date_from < task.start_date < args.date_to and not args.force:
             # TODO: remove duplicates from ReToggl before push
             raise Exception("There is at least one time entry to duplicate. TW2RT doesn't handle this currently")
 
@@ -128,7 +130,7 @@ try:
 
     task_data = tw_api.get_time_entries(args.date_from, args.date_to, config['teamwork']['user_id'])
     verbose(1, "%i time entries loaded" % len(task_data))
-
+    rbNameHelper = RBNameHelper(config.items('rb_name_helper'))
     for task in task_data:
         verbose(
           2,
@@ -143,7 +145,7 @@ try:
                 start_date=task.dt_start,
                 end_date=task.dt_finish,
                 name=task.name,
-                project_id=RBNameHelper.conv_task_name(task.name, RBNameHelper.NAME_TO_PROJECT_ID),
+                project_id=rbNameHelper.conv_task_name(task.name, RBNameHelper.NAME_TO_PROJECT_ID),
                 user_id=config['retoggl']['user_id'],
                 id=task.id
             )

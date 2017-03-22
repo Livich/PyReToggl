@@ -93,7 +93,7 @@ try:
                 start_date=start_datetime,
                 end_date=end_datetime,
                 name=task["Task"].strip(),
-                project_id=RBNameHelper.conv_task_name(task["Task"], RBNameHelper.NAME_TO_PROJECT_ID),
+                project_id=RBNameHelper.conv_task_name_auto(task["Task"], RBNameHelper.NAME_TO_PROJECT_ID),
                 user_id=args.user_id,
                 id=task["Id"]
             )
