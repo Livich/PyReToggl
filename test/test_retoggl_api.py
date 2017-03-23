@@ -21,4 +21,4 @@ def test_rt_access(rt_config):
     rt_projects = rt_api.get_projects()
     assert len(rt_projects) > 0
     assert rt_api.api_call_method == 'get'
-    assert '***REMOVED***projects?user_token=' in rt_api.api_call_url
+    assert 'http://retoggl.cyberhull.com/CyberHULLProjects/hs/portal/projects?user_token=' in rt_api.api_call_url

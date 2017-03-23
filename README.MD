@@ -39,7 +39,7 @@ from argparse import Namespace
 # Create API client instance
 tt = ReTogglAPI(Namespace(
     user_id="1234",
-    endpoint="***REMOVED***",
+    endpoint="http://retoggl.cyberhull.com/CyberHULLProjects/hs/portal/",
     user_agent="PyReToggl",
     ch_user_token="YOUR CH TOKEN",
     user_token="YOUR RT TOKEN"
