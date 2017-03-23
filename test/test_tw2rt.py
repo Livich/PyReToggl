@@ -1,7 +1,7 @@
 import subprocess
 
 
-def test_entry_duplication():
+def test_entry_duplication(tw2rt_profile_file_name):
     try:
         subprocess.check_output([
             "python3",
@@ -9,7 +9,8 @@ def test_entry_duplication():
             "-v 4",
             "-f 13/03/2017T08:00",
             "-t 13/03/2017T23:59",
-            "-S 1"
+            "-S 1",
+            "-p", tw2rt_profile_file_name
         ])
         assert False
     except subprocess.CalledProcessError as ex:

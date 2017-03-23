@@ -11,7 +11,7 @@ date_format = "%d/%m/%Y"
 time_format = "%H:%M"
 date_time_format = "%sT%s" % (date_format, time_format)
 date_time_format_friendly = 'DD/MM/YYYYTHH:MM'
-global_config_file = "~/tw2rt.ini"
+global_config_file = os.path.expanduser('~')+"/tw2rt.ini"
 
 
 def valid_date_time(s):

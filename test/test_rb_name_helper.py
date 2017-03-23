@@ -1,17 +1,10 @@
 from RBNameHelper import RBNameHelper
 
 
-def test_name_to_project():
-    cases = {
-        'MNT-228': '000000276',
-        'CYB-1234': '000000084',
-        'ET-0': '000000277',
-        'HIVE-88': '000000297',
-        'Collaboration - development': '000000084',
-        'collaboration - maintenance': '000000276'
-    }
-    for ticket, proj_id in cases.items():
+def test_name_to_project(rb_name_helper_preset):
+    for ticket, proj_id in rb_name_helper_preset.items():
         assert proj_id == RBNameHelper.conv_task_name_auto(ticket, RBNameHelper.NAME_TO_PROJECT_ID)
+
 
 def test_name_to_task_name():
     cases = {
