@@ -57,8 +57,9 @@ parser.add_argument('-S',
                     type=int,
                     default=1,
                     help='simulation mode. Set to 0 to push tasks')
-parser.add_argument('--force',
-                    action='store_true')
+parser.add_argument('--destructive',
+                    action='store_true',
+                    default=False)
 
 args = parser.parse_args()
 
@@ -109,9 +110,14 @@ try:
     )
 
     for tid, task in rt_api.get_latest_tasks().items():
-        if args.date_from < task.start_date < args.date_to and not args.force:
-            # TODO: remove duplicates from ReToggl before push
-            raise Exception("There is at least one time entry to duplicate. TW2RT doesn't handle this currently")
+        if args.date_from < task.start_date < args.date_to:
+            if args.destructive:
+                if not args.simulate:
+                    rt_api.delete_time_entry(task)
+                verbose(-1, "Removed task #%s '%s'%s" % (task.id, task.name, " (simulation)" if args.simulate else ""))
+            else:
+                raise Exception("There is at least one time entry to duplicate. Call tw2rt with --destructive flag "
+                                "to overwrite entries")
 
     rt_projects = rt_api.get_projects()
     verbose(1, "%i projects loaded" % len(rt_projects))

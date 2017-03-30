@@ -91,7 +91,7 @@ All command line arguments are optional.
 * `-p, --profile` profile configuration file. T2RT will try to use `~/tw2rt.ini` and then `./config.ini` files when alternative value is not provided
 * `-v, --verbose` verbosity level in range from -2 to 4. It is set to `0` by default
 * `-S, --simulate` simulation flag. By default it set to `1` so TW2RT will not actually push time entries to ReToggl
-* `--force` override some checks which prevents duplicating time entries and so on
+* `--destructive` call TW2RT with this flag to allow it to delete existing time entries from ReToggl to avoid time entry duplicates
 
 ### Configuration file format
 
@@ -142,7 +142,7 @@ So there are a lot of ReviewBuzz related code in the repository.
 * Put configuration file to `~/tw2rt.ini` (you may copy it from `config.ini`). Don't forget to change its contents!
 * Use `push_today.sh` everyday, or by example:
 ```
-python3 ./tw2rt.py -f 01/03/2017T00:01 -t 01/03/2017T23:59 -v 0 -S 0
+python3 ./tw2rt.py -f 01/03/2017T00:01 -t 01/03/2017T23:59 -v 0 -S 0 --destructive
 ```
 
 Currently TW2RT will prevent duplicating ReToggl items just by stopping execution.
