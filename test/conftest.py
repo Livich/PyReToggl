@@ -4,7 +4,7 @@ import configparser
 
 
 def __config_file():
-    return os.path.expanduser('~')+'/tw2rt.ini';
+    return os.path.join(os.path.expanduser('~'), 'tw2rt.ini')
 
 
 @pytest.fixture(scope="module")

@@ -1,4 +1,4 @@
-from ReogglAPI import ReTogglAPI
+from RetogglAPI import ReTogglAPI
 from argparse import Namespace
 import requests
 import json

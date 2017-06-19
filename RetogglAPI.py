@@ -3,6 +3,7 @@ import json
 from datetime import date, time, datetime
 import random
 from urllib.parse import urlparse
+import uuid
 
 
 class ReTogglAPI:
@@ -77,7 +78,7 @@ class ReTogglAPI:
         def as_new_json(self):
             """Get JSON data for the entity. Server needs special JSON format to create new entries"""
             o = [{
-                'temporary_id': random.randint(0, 99999999),
+                'temporary_id': str(uuid.uuid4()),
                 'time_entry': {
                     'user_id': self.user_id,
                     'name': self.name,

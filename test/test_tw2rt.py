@@ -4,11 +4,11 @@ import subprocess
 def test_entry_duplication(tw2rt_profile_file_name):
     try:
         subprocess.check_output([
-            "python3",
+            "python",
             "tw2rt.py",
             "-v 4",
-            "-f 13/03/2017T08:00",
-            "-t 13/03/2017T23:59",
+            "-f 01/06/2017T08:00",
+            "-t 15/06/2017T23:59",
             "-S 1",
             "-p", tw2rt_profile_file_name
         ])

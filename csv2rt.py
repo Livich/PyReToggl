@@ -1,6 +1,6 @@
 import argparse
 from datetime import date, time, datetime, timedelta
-from ReogglAPI import ReTogglAPI
+from RetogglAPI import ReTogglAPI
 from RBNameHelper import RBNameHelper
 import csv
 import sys

@@ -1,6 +1,6 @@
 import argparse
 import datetime
-from ReogglAPI import ReTogglAPI
+from RetogglAPI import ReTogglAPI
 from TeamWorkAPI import TeamWorkAPI
 from RBNameHelper import RBNameHelper
 import sys
@@ -11,7 +11,7 @@ date_format = "%d/%m/%Y"
 time_format = "%H:%M"
 date_time_format = "%sT%s" % (date_format, time_format)
 date_time_format_friendly = 'DD/MM/YYYYTHH:MM'
-global_config_file = os.path.expanduser('~')+"/tw2rt.ini"
+global_config_file = os.path.join(os.path.expanduser('~'), "tw2rt.ini")
 
 
 def valid_date_time(s):
