@@ -1,6 +1,6 @@
 # ReToggl unofficial API client
 
-[![Build Status](https://travis-ci.com/Livich/PyReToggl.svg?token=6T8dpeTmz8PpycNpNg8C&branch=master)](https://travis-ci.com/Livich/PyReToggl)
+[![Build Status](https://travis-ci.org/Livich/PyReToggl.svg?branch=master)](https://travis-ci.org/Livich/PyReToggl)
 
 ## ReTogglAPI
 
